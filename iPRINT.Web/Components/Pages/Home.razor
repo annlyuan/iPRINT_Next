@@ -1,0 +1,257 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using iPRINT.Core
+@using System.IO
+@using System.Text
+@inject NetworkService BioEngine
+@inject IJSRuntime JSRuntime
+
+<PageTitle>iPRINT - CubeY Analysis</PageTitle>
+
+<div class="container mt-4">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary">iPRINT Database</h1>
+        <p class="lead text-muted">iPRINT (CubeY) High-performance Human/Mouse PPI Network Retrieval System</p>
+        
+        <div class="alert alert-info d-inline-block shadow-sm py-2">
+            <strong>System Load:</strong> 
+            Human (@BioEngine.GetHumanCount().ToString("N0")) | 
+            Mouse (@BioEngine.GetMouseCount().ToString("N0"))
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 bg-light p-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <label class="form-label fw-bold">1. Select Species</label>
+                <select @bind="selectedSpecies" class="select form-select form-select-lg">
+                    <option value="human">Human</option>
+                    <option value="mouse">Mouse</option>
+                </select>
+            </div>
+            
+            <div class="col-md-5">
+                <label class="form-label fw-bold">
+                    2. Enter Gene Symbol 
+                    <span class="text-muted fw-normal ms-1" style="font-size: 0.85rem;">(Multiple genes supported, separate with commas)</span>
+                </label>
+                <input @bind="geneInput" @onkeyup="HandleKeyUp" 
+                       placeholder="e.g., Negr1, Orc4, App" 
+                       class="form-control form-select-lg" />
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-check form-switch pb-2">
+                    <input class="form-check-input" type="checkbox" id="internalToggle" @bind="showInternalEdges">
+                    <label class="form-check-label fw-bold" for="internalToggle">Show Subnetwork Interactions</label>
+                </div>
+            </div>
+
+            <div class="col-md-2 d-grid">
+                <button @onclick="HandleSearch" class="btn btn-primary btn-lg shadow">Search</button>
+            </div>
+        </div>
+    </div>
+
+    @if (results != null)
+    {
+        <div class="results-area mt-4 fade-in">
+            <div class="row">
+                <div class="col-md-9 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white fw-bold d-flex justify-content-between">
+                            <span><i class="bi bi-diagram-3 text-primary"></i> @(showInternalEdges ? "Full Subnetwork Connectivity View" : "Multi-gene 1-hop Neighbor View")</span>
+                            <span class="text-muted small text-truncate" style="max-width: 300px;">Query: @geneInput</span>
+                        </div>
+                        <div class="card-body p-0" style="min-height: 600px;">
+                            <div id="cy" style="width: 100%; height: 600px; background: #fff;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <div class="card shadow-sm border-0 h-100 bg-white">
+                        <div class="card-header bg-dark text-white fw-bold">Legend & Statistics</div>
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">Nodes</h6>
+                            <div class="ms-2 mb-4">
+                                <div class="mb-2">
+                                    <span class="badge" style="background-color: #CE0000; width: 14px; height: 14px; border-radius: 50%; display: inline-block; vertical-align: middle;"></span> 
+                                    <span class="ms-1">Query Gene Set</span>
+                                </div>
+                                <div>
+                                    <span class="badge" style="background-color: #D8BFD8; width: 14px; height: 14px; border-radius: 50%; display: inline-block; vertical-align: middle;"></span> 
+                                    <span class="ms-1">Interaction Neighbors</span>
+                                </div>
+                            </div>
+                            
+                            <hr/>
+                            
+                            <h6 class="fw-bold mb-3">Edge Statistics</h6>
+                            <div class="ms-2">
+                                @if (selectedSpecies == "human")
+                                {
+                                    <div class="mb-2 text-secondary">
+                                        <span style="border-bottom: 3px solid #cccccc; width: 30px; display: inline-block; vertical-align: middle;"></span> 
+                                        Human PPIs (@results.Count)
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="mb-2 text-success">
+                                        <span style="border-bottom: 3px solid #28a745; width: 30px; display: inline-block; vertical-align: middle;"></span> 
+                                        Shared (@results.Count(r => r.Label == "Shared"))
+                                    </div>
+                                    <div class="mb-2 text-danger">
+                                        <span style="border-bottom: 3px solid #dc3545; width: 30px; display: inline-block; vertical-align: middle;"></span> 
+                                        AD_only (@results.Count(r => r.Label == "AD_specific"))
+                                    </div>
+                                    <div class="mb-2 text-primary">
+                                        <span style="border-bottom: 3px solid #007bff; width: 30px; display: inline-block; vertical-align: middle;"></span> 
+                                        WT_only (@results.Count(r => r.Label == "WT_specific"))
+                                    </div>
+                                }
+                            </div>
+                            <div class="mt-4 p-2 bg-light rounded small text-muted">
+                                <i class="bi bi-info-circle"></i> Tip: Use mouse wheel to zoom, drag nodes to adjust layout.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-table"></i> Combined Search Results (@results.Count records)</span>
+                    @if (results.Any())
+                    {
+                        <button class="btn btn-outline-success btn-sm shadow-sm" @onclick="ExportCSV">
+                            <i class="bi bi-download"></i> Export CSV
+                        </button>
+                    }
+                </div>
+                <div class="card-body p-0">
+                    @if (results.Count > 0)
+                    {
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light sticky-top">
+                                    <tr>
+                                        <th>Gene 1</th>
+                                        <th>Gene 2</th>
+                                        <th>Label</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in results)
+                                    {
+                                        <tr>
+                                            <td><span class="fw-bold text-primary">@item.Gene1</span></td>
+                                            <td><span class="fw-bold text-primary">@item.Gene2</span></td>
+                                            <td>
+                                                <span class="badge rounded-pill @(item.Label == "Shared" ? "bg-success" : item.Label == "AD_specific" ? "bg-danger" : "bg-primary")">
+                                                    @item.Label
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="p-5 text-center text-muted">
+                            <i class="bi bi-search-heart display-4"></i>
+                            <p class="mt-3">No matching gene interaction data found.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .fade-in { animation: fadeIn 0.4s ease-in; }
+    @@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .sticky-top { top: -1px; z-index: 10; }
+</style>
+
+@code {
+    private string geneInput = "";
+    private string selectedSpecies = "mouse"; // human
+    private bool showInternalEdges = false; 
+    private List<Interaction>? results;
+
+    protected override void OnInitialized()
+    {
+        if (BioEngine.GetHumanCount() == 0 && BioEngine.GetMouseCount() == 0)
+        {
+            var basePath = AppContext.BaseDirectory;
+            BioEngine.LoadData(Path.Combine(basePath, "Data", "human.csv"), "human");
+            BioEngine.LoadData(Path.Combine(basePath, "Data", "mouse.csv"), "mouse");
+        }
+    }
+
+    private async Task HandleSearch()
+    {
+        if (string.IsNullOrWhiteSpace(geneInput)) return;
+
+        var queryGenes = geneInput.Split(new[] { ',', '，' }, StringSplitOptions.RemoveEmptyEntries)
+                                  .Select(g => g.Trim())
+                                  .ToList();
+
+        if (!queryGenes.Any()) return;
+
+        results = null;
+        StateHasChanged();
+        await Task.Delay(100);
+
+        var neighbors = BioEngine.SearchNetworkMultiple(queryGenes, selectedSpecies);
+        
+        if (showInternalEdges && neighbors.Any())
+        {
+            var allGenes = neighbors.SelectMany(i => new[] { i.Gene1, i.Gene2 }).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            results = BioEngine.GetInternalEdges(allGenes, selectedSpecies);
+        }
+        else
+        {
+            results = neighbors;
+        }
+
+        StateHasChanged();
+        await Task.Delay(200); 
+
+        var elements = new List<object>();
+        if (results != null && results.Any())
+        {
+            var nodesAdded = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var querySet = new HashSet<string>(queryGenes, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var item in results)
+            {
+                if (nodesAdded.Add(item.Gene1))
+                    elements.Add(new { data = new { id = item.Gene1, isQuery = querySet.Contains(item.Gene1) } });
+                
+                if (nodesAdded.Add(item.Gene2))
+                    elements.Add(new { data = new { id = item.Gene2, isQuery = querySet.Contains(item.Gene2) } });
+
+                elements.Add(new { data = new { source = item.Gene1, target = item.Gene2, label = item.Label } });
+            }
+        }
+        await JSRuntime.InvokeVoidAsync("initNetworkGraph", elements, selectedSpecies);
+    }
+    
+    private async Task ExportCSV()
+    {
+        if (results == null || !results.Any()) return;
+        var csv = new StringBuilder();
+        csv.AppendLine("Gene1,Gene2,Label"); 
+        foreach (var item in results) csv.AppendLine($"{item.Gene1},{item.Gene2},{item.Label}");
+        var safeInput = geneInput.Length > 20 ? "MultipleGenes" : geneInput.Replace(",", "_");
+        await JSRuntime.InvokeVoidAsync("downloadFile", $"iPRINT_{selectedSpecies}_{safeInput}.csv", csv.ToString());
+    }
+
+    private async Task HandleKeyUp(KeyboardEventArgs e) { if (e.Key == "Enter") await HandleSearch(); }
+}

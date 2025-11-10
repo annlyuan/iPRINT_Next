@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="iPRINT.Core/iPRINT.Core.csproj" />
+  <Project Path="iPRINT.Web/iPRINT.Web.csproj" />
+</Solution>

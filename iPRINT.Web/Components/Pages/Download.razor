@@ -1,0 +1,65 @@
+﻿@page "/download"
+
+<PageTitle>Data Download - CubeY</PageTitle>
+
+<div class="container mt-4">
+    <div class="text-center mb-5">
+        @* Filling in the H1 title you left blank *@
+        <h1 class="display-4 fw-bold text-primary">Data Repository</h1>
+        <p class="lead text-muted">Download raw protein-protein interaction (PPI) datasets for your local bioinformatic analysis.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Dataset Name</th>
+                                <th>Species</th>
+                                <th>Format</th>
+                                <th class="text-end pe-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="ps-4 fw-bold">Human PPI Network</td>
+                                <td>Homo sapiens</td>
+                                <td><span class="badge bg-secondary">CSV</span></td>
+                                <td class="text-end pe-4">
+                                    <a href="downloads/iPRINT_H_HEK293T.csv" download class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-download"></i> Download
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">Mouse PPI Network</td>
+                                <td>Mus musculus</td>
+                                <td><span class="badge bg-secondary">CSV</span></td>
+                                <td class="text-end pe-4">
+                                    <a href="downloads/iPRINT_M.csv" download class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-download"></i> Download
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="alert alert-warning mt-4 shadow-sm">
+                <i class="bi bi-exclamation-triangle"></i> 
+                <strong>Terms of Use:</strong> These datasets are provided for research purposes only. If you use this data in your publications, please cite the <strong>CubeY (iPRINT)</strong> database. Contact Dr. Yuan Liu annlyuan323@gmail.com for any questions or collaborations.
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Adding a little fade-in effect to match your Home page */
+    .container {
+        animation: fadeIn 0.5s ease-in;
+    }
+    @@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>

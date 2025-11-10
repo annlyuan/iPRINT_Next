@@ -1,0 +1,15 @@
+# --- .NET 编译产物 ---
+[Bb]in/
+[Oo]bj/
+out/
+publish/
+
+# --- IDE 配置文件 (VS Code / Visual Studio) ---
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+
+# --- Mac 系统垃圾文件 ---
+.DS_Store
