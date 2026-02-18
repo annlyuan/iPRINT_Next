@@ -65,7 +65,7 @@ iPRINT is a high-performance, web-based bioinformatics platform designed for the
 - **Visualization**: Cytoscape.js
 - **Data Parsing**: CsvHelper
 - **Styling**: Bootstrap 5 & Custom CSS
-- **Mascot**: CubeY "Little Green" (CubeY小绿)
+- **Mascot**: CubeY "Little Green" 
 
 ---
 
@@ -86,7 +86,7 @@ iPRINT is a high-performance, web-based bioinformatics platform designed for the
 2. Open your terminal in the `iPRINT_Next` directory.
 3. Run the following command:
    ```bash
-   dotnet run --project iPRINT_Next.Web
+   dotnet run --project iPRINT.Web
 4. Open your browser and navigate to http://localhost:5000 (or the port specified in the console).
 
 ## About the Data
