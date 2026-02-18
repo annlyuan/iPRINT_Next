@@ -36,7 +36,7 @@ This project is built using professional software engineering practices to ensur
 * **Induced Subgraph Algorithm**: Dynamic extraction of local connectivity patterns among queried gene neighbors.
 * **Species-Aware Normalization**: Automated symbol casing logic for multi-species data integrity (e.g., Human vs. Mouse capitalization).
 * **Edge Classification**: Integrated visual encoding for disease-specific (AD) vs. Wild-type (WT) interaction labels.
-=======
+
 # iPRINT - Integrated Protein Interaction Network Tool
 **Developed by Dr.Yuan Liu (CubeY studio)**
 
