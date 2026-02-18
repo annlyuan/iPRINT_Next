@@ -1,6 +1,6 @@
 # iPRINT protein-protein interactions database (C#/.NET & Blazor)
 
-High-performance bioinformatics network retrieval system built with .NET 10 & Blazor. Featuring sub-second processing for 100k+ protein interactions and dynamic subnetwork visualization.
+High-performance bioinformatics network retrieval system built with C#/.NET 10 & Blazor. Featuring sub-second processing for 100k+ protein interactions and dynamic subnetwork visualization.
 
 <p align="center">
   <img src="Screen Recording 2026-02-18 at 01.32.49.gif" width="800" alt="iPRINT Project Demonstration">
