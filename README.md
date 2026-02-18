@@ -1,12 +1,12 @@
 # iPRINT protein-protein interactions database (C#/.NET & Blazor)
 
-High-performance bioinformatics network retrieval system built with C#/.NET 10 & Blazor. Featuring sub-second processing for 100k+ protein interactions and dynamic subnetwork visualization.
+High-performance bioinformatics network retrieval system built with C#/.NET 10 & Blazor. Featuring sub-second processing for 110k+ protein interactions and dynamic subnetwork visualization.
 
 <p align="center">
   <img src="Screen Recording 2026-02-18 at 01.32.49.gif" width="800" alt="iPRINT Project Demonstration">
 </p>
 
-## 🛠️ Technical Implementation
+## Technical Implementation
 
 This project is built using professional software engineering practices to ensure high performance and maintainability in a bioinformatics context.
 
@@ -96,4 +96,4 @@ Human: Comprehensive human (HEK293T cell) interactome.
 
 Mouse: Alzheimer's Disease (AD) vs. Wild Type (WT) specific protein networks.
 
-© 2026 CubeY Studio (Dr. Yuan Liu). Empowering bioinformatics through elegant engineering.
+© 2026 CubeY Studio (Dr. Yuan Liu). Empowering bioinformatics through elegant engineering. annlyuan323@gmail.com
