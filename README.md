@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # iPRINT protein-protein interactions database (C#/.NET & Blazor)
 
 High-performance bioinformatics network retrieval system built with .NET 10 & Blazor. Featuring sub-second processing for 100k+ protein interactions and dynamic subnetwork visualization.
@@ -87,7 +86,7 @@ iPRINT is a high-performance, web-based bioinformatics platform designed for the
 2. Open your terminal in the `iPRINT_Next` directory.
 3. Run the following command:
    ```bash
-   dotnet run --project iPRINT.Web
+   dotnet run --project iPRINT_Next.Web
 4. Open your browser and navigate to http://localhost:5000 (or the port specified in the console).
 
 ## About the Data
@@ -98,4 +97,3 @@ Human: Comprehensive human (HEK293T cell) interactome.
 Mouse: Alzheimer's Disease (AD) vs. Wild Type (WT) specific protein networks.
 
 © 2026 CubeY Studio (Dr. Yuan Liu). Empowering bioinformatics through elegant engineering.
->>>>>>> f312691 (feat: initial commit of iPRINT system v1.0)
