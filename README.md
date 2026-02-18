@@ -5,7 +5,7 @@ High-performance bioinformatics network retrieval system built with C#/.NET 10 &
 <p align="center">
   <img src="Screen Recording 2026-02-18 at 01.32.49.gif" width="800" alt="iPRINT Project Demonstration">
 </p>
-**Hi! Reload the page to restart the illustration.**
+*Hi! Reload the page to restart the illustration.*
 
 ## Technical Implementation
 
